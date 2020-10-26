@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>math.js | plot</title>
+  <script src="https://unpkg.com/mathjs@7.5.1/dist/math.min.js"></script>
+
+  <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script> // from:  https://html.form.guide/html-form/html5-input-type-range/ (utilise jquery)
+$(function()
+{
+$('.slider').on('input change', function(){
+          $(this).next($('.slider_label')).html(this.value);
+        });
+      $('.slider_label').each(function(){
+          var value = $(this).prev().attr('value');
+          $(this).html(value);
+        });  
+  
+  
+})
+</script>
+
+  <style>
+    input[type=text] {
+      width: 100px;
+    }
+    input {
+      padding: 3px;
+    }
+    input[type=range] {
+      padding-top: 0px;
+    }
+
+    body, html, input {
+      font-family: sans-serif;
+      font-size: 11pt;
+
+    }
+    form {
+      margin: 20px 0;
+    }
+  </style>
+
+
+</head>
+<body>
+
+<!--  <form id="form">
+  <label for="par1">Enter parameter value 1:</label> 
+  <input type="text" id="par1" value="4" />
+  <label for="par2">Enter parameter value 2:</label>
+  <input type="text" id="par2" value="5" />
+  <input type="submit" value="Draw" />
+</form>
+cf. https://www.w3schools.com/tags/tag_label.asp -->
+
+<p><label for="slid1">Parameter 1: </label>
+  <input type="range" min="0" max="1" value="0.3" step="0.1" class="slider" id="slid1" oninput="slid1_disp.value = slid1.value">
+  <output  id="slid1_disp"></output></p>
+
+
+<p><label for="slid2">Parameter 2: </label> <input type="range" id="slid2"  class="slider" min="0" max="10" value="3">
+  <span  class="slider_label"></span></p>
+
+
+<div id="plot"></div>
+
+<p>
+  Used plot library: <a href="https://plot.ly/javascript/">Plotly</a>
+</p>
+
+<script>
+  function draw() {
+    try {
+      
+    
+      const pslid1 = 10 * document.getElementById('slid1').value
+      const pslid2 = document.getElementById('slid2').value
+
+      const exprfct = 'p1 * sin(x) + p2 * cos(x/2)'
+      
+      const myfct = math.compile(exprfct) //https://mathjs.org/docs/reference/functions/compile.html
+      
+      // evaluate the expression repeatedly for different values of x
+      const xValues = math.range(0, 10, 0.1).toArray()
+      const yValues = xValues.map(function (xx) {
+        return myfct.evaluate({x: xx,p1:pslid1,p2:pslid2})
+      })
+
+      // render the plot using plotly
+      const trace1 = {
+        x: xValues,
+        y: yValues,
+        type: 'scatter'
+      }
+      const data = [trace1]
+      Plotly.newPlot('plot', data)
+      //document.write(param2) //essai
+    }
+    catch (err) {
+      console.error(err)
+      alert(err)
+    }
+  }
+
+  /* document.getElementById('form').onsubmit = function (event) {
+    event.preventDefault()
+    draw()
+  } */
+  document.getElementById('slid1').onchange = function (event) {
+    event.preventDefault()
+    draw()
+    
+  }
+  document.getElementById('slid2').onchange = function (event) {
+    event.preventDefault()
+    draw()
+    
+  }
+
+  draw() //dessine graphe initial
+
+  
+</script>
+
+
+</body>
+</html>

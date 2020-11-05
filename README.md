@@ -1,4 +1,4 @@
 # faqnotfake
 
 
-These are F.A.Q., not fake (news)
+These are (answers to) F.A.Q., not fake (news)
